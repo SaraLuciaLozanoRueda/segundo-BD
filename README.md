@@ -197,7 +197,7 @@
      | NULL                        |
      | PEPE RUIZ SANTANA           |
      | JUAN GÓMEZ LÓPEZ            |
-     | DIEGO FLORES SALAS          |
+     | DIEGO FLORES SALAS          
      | MARTA HERRERA GIL           |
      | IRENE SALAS FLORES          |
      | JUAN ANTONIO SÁEZ GUERRERO  |
@@ -771,7 +771,7 @@
 
 ## Consultas multitabla (Composición interna)
 
-Resuelva todas las consultas utilizando la sintaxis de SQL1 y SQL2.
+###### Resuelva todas las consultas utilizando la sintaxis de SQL1 y SQL2.
 
 1. Devuelve un listado con los empleados y los datos de los departamentos
     donde trabaja cada uno.
@@ -971,11 +971,11 @@ Marta|1|1|Desarrollo|120000.0|6000.0
 
 ## Consultas multitabla (Composición externa)
 
-Resuelva todas las consultas utilizando las cláusulas LEFT JOIN y RIGHT JOIN.
+###### Resuelva todas las consultas utilizando las cláusulas LEFT JOIN y RIGHT JOIN.
 
 1. Devuelve un listado con todos los empleados junto con los datos de los
-  departamentos donde trabajan. Este listado también debe incluir los
-  empleados que no tienen ningún departamento asociado.
+    departamentos donde trabajan. Este listado también debe incluir los
+    empleados que no tienen ningún departamento asociado.
 
   ```mysql
   mysql> SELECT e.nombre,d.nombre AS departamento
@@ -1003,7 +1003,7 @@ Resuelva todas las consultas utilizando las cláusulas LEFT JOIN y RIGHT JOIN.
   ```
 
 2. Devuelve un listado donde sólo aparezcan aquellos empleados que no
-  tienen ningún departamento asociado.
+    tienen ningún departamento asociado.
 
   ```mysql
   mysql> SELECT e.nombre,d.nombre AS departamento
@@ -1021,7 +1021,7 @@ Resuelva todas las consultas utilizando las cláusulas LEFT JOIN y RIGHT JOIN.
   ```
 
 3. Devuelve un listado donde sólo aparezcan aquellos departamentos que no
-  tienen ningún empleado asociado.
+    tienen ningún empleado asociado.
 
   ```mysql
   mysql> SELECT e.nombre,d.nombre AS departamento
@@ -1039,10 +1039,10 @@ Resuelva todas las consultas utilizando las cláusulas LEFT JOIN y RIGHT JOIN.
   ```
 
 4. Devuelve un listado con todos los empleados junto con los datos de los
-  departamentos donde trabajan. El listado debe incluir los empleados que no
-  tienen ningún departamento asociado y los departamentos que no tienen
-  ningún empleado asociado. Ordene el listado alfabéticamente por el
-  nombre del departamento.
+    departamentos donde trabajan. El listado debe incluir los empleados que no
+    tienen ningún departamento asociado y los departamentos que no tienen
+    ningún empleado asociado. Ordene el listado alfabéticamente por el
+    nombre del departamento.
 
   ```mysql
   mysql> SELECT e.nombre,d.nombre AS departamento
@@ -1079,8 +1079,8 @@ Resuelva todas las consultas utilizando las cláusulas LEFT JOIN y RIGHT JOIN.
   
 
 5. Devuelve un listado con los empleados que no tienen ningún departamento
-  asociado y los departamentos que no tienen ningún empleado asociado.
-  Ordene el listado alfabéticamente por el nombre del departamento.
+    asociado y los departamentos que no tienen ningún empleado asociado.
+    Ordene el listado alfabéticamente por el nombre del departamento.
 
   ```mysql
   mysql> SELECT e.nombre,d.nombre AS departamento
@@ -1138,37 +1138,346 @@ Resuelva todas las consultas utilizando las cláusulas LEFT JOIN y RIGHT JOIN.
 
 2. Calcula la media del presupuesto de todos los departamentos.
 
+     ```mysql
+     mysql> SELECT AVG(d.presupuesto) AS MEDIA
+         -> FROM departamento AS d;
+     +--------------------+
+     | MEDIA              |
+     +--------------------+
+     | 147857.14285714287 |
+     +--------------------+
+     1 row in set (0,00 sec)
+     
+     ```
+
+     
+
 3. Calcula el valor mínimo del presupuesto de todos los departamentos.
 
+     ```mysql
+     mysql> SELECT MIN(d.presupuesto) AS Minimo
+         -> FROM departamento AS d;
+     +--------+
+     | Minimo |
+     +--------+
+     |      0 |
+     +--------+
+     1 row in set (0,00 sec)
+     
+     ```
+
+     
+
 4. Calcula el nombre del departamento y el presupuesto que tiene asignado,
-  del departamento con menor presupuesto.
+     del departamento con menor presupuesto.
+
+     ```mysql
+     mysql> SELECT d.nombre, d.presupuesto
+         -> FROM departamento AS d
+         -> WHERE d.presupuesto IN (SELECT MIN(presupuesto) FROM departamento);
+     +------------+-------------+
+     | nombre     | presupuesto |
+     +------------+-------------+
+     | Proyectos  |           0 |
+     | Publicidad |           0 |
+     +------------+-------------+
+     2 rows in set (0,00 sec)
+     
+     ```
+
+     
 
 5. Calcula el valor máximo del presupuesto de todos los departamentos.
 
+     ```mysql
+     mysql> SELECT  d.presupuesto
+         -> FROM departamento AS d
+         -> WHERE d.presupuesto IN (SELECT MAX(presupuesto) FROM departamento);
+     +-------------+
+     | presupuesto |
+     +-------------+
+     |      375000 |
+     +-------------+
+     1 row in set (0,00 sec)
+     
+     ```
+
+     
+
 6. Calcula el nombre del departamento y el presupuesto que tiene asignado,
-  del departamento con mayor presupuesto.
+     del departamento con mayor presupuesto.
+
+     ```mysql
+     mysql> SELECT d.nombre, d.presupuesto
+         -> FROM departamento AS d
+         -> WHERE d.presupuesto IN (SELECT MAX(presupuesto) FROM departamento);
+     +--------+-------------+
+     | nombre | presupuesto |
+     +--------+-------------+
+     | I+D    |      375000 |
+     +--------+-------------+
+     1 row in set (0,00 sec)
+     
+     ```
+
+     
 
 7. Calcula el número total de empleados que hay en la tabla empleado.
 
+     ```mysql
+     mysql> SELECT  COUNT(e.codigo) AS cantidad_EMPLEADOS
+         -> FROM empleado AS e;
+     +--------------------+
+     | cantidad_EMPLEADOS |
+     +--------------------+
+     |                 13 |
+     +--------------------+
+     1 row in set (0,00 sec)
+     
+     ```
+
+     
+
 8. Calcula el número de empleados que no tienen NULL en su segundo
-  apellido.
+     apellido.
+
+     ```mysql
+     mysql> SELECT  COUNT(e.codigo) AS cantidad_NOT_NULL_EMPLEADOS
+         -> FROM empleado AS e
+         -> WHERE NOT e.apellido2 IS NULL;
+     +-----------------------------+
+     | cantidad_NOT_NULL_EMPLEADOS |
+     +-----------------------------+
+     |                          11 |
+     +-----------------------------+
+     1 row in set (0,00 sec)
+     
+     ```
+
+     
 
 9. Calcula el número de empleados que hay en cada departamento. Tienes que
-  devolver dos columnas, una con el nombre del departamento y otra con el
-  número de empleados que tiene asignados.
+     devolver dos columnas, una con el nombre del departamento y otra con el
+       número de empleados que tiene asignados.
+
+     ```mysql
+     mysql> SELECT d.nombre AS Departamento, COUNT(e.codigo) AS Empleados
+         -> FROM departamento AS d
+         -> LEFT JOIN empleado AS e ON d.codigo = e.codigo_departamento
+         -> GROUP BY d.nombre;
+     +------------------+-----------+
+     | Departamento     | Empleados |
+     +------------------+-----------+
+     | Desarrollo       |         3 |
+     | Sistemas         |         3 |
+     | Recursos Humanos |         2 |
+     | Contabilidad     |         1 |
+     | I+D              |         2 |
+     | Proyectos        |         0 |
+     | Publicidad       |         0 |
+     +------------------+-----------+
+     7 rows in set (0,01 sec)
+     
+     ```
+
+     
 
 10. Calcula el nombre de los departamentos que tienen más de 2 empleados. El
-    resultado debe tener dos columnas, una con el nombre del departamento y
-    otra con el número de empleados que tiene asignados.
+     resultado debe tener dos columnas, una con el nombre del departamento y
+     otra con el número de empleados que tiene asignados.
+
+     ```mysql
+     mysql> SELECT d.nombre AS Departamento, COUNT(e.codigo) AS empleados
+         -> FROM departamento AS d
+         -> LEFT JOIN empleado AS e ON d.codigo = e.codigo_departamento
+         -> GROUP BY d.nombre
+         -> HAVING COUNT(e.codigo) > 2;
+     +--------------+-----------+
+     | Departamento | empleados |
+     +--------------+-----------+
+     | Desarrollo   |         3 |
+     | Sistemas     |         3 |
+     +--------------+-----------+
+     2 rows in set (0,01 sec)
+     
+     ```
+
+     
 
 11. Calcula el número de empleados que trabajan en cada uno de los
-    departamentos. El resultado de esta consulta también tiene que incluir
-    aquellos departamentos que no tienen ningún empleado asociado.
+      departamentos. El resultado de esta consulta también tiene que incluir
+      aquellos departamentos que no tienen ningún empleado asociado.
+
+      ```mysql
+      mysql> SELECT d.nombre AS Departamento, COUNT(e.codigo) AS Total_empleados
+          -> FROM departamento AS d
+          -> LEFT JOIN empleado AS e ON d.codigo = e.codigo_departamento
+          -> GROUP BY d.nombre;
+      +------------------+-----------------+
+      | Departamento     | Total_empleados |
+      +------------------+-----------------+
+      | Desarrollo       |               3 |
+      | Sistemas         |               3 |
+      | Recursos Humanos |               2 |
+      | Contabilidad     |               1 |
+      | I+D              |               2 |
+      | Proyectos        |               0 |
+      | Publicidad       |               0 |
+      +------------------+-----------------+
+      7 rows in set (0,00 sec)
+      
+      ```
+
+      
 
 12. Calcula el número de empleados que trabajan en cada unos de los
-    departamentos que tienen un presupuesto mayor a 200000 euros.
+      departamentos que tienen un presupuesto mayor a 200000 euros.
+
+      ```mysql
+      mysql> SELECT d.nombre AS Departamento, COUNT(e.codigo) AS Total_empleados
+          -> FROM departamento AS d
+          -> LEFT JOIN empleado AS e ON d.codigo = e.codigo_departamento
+          -> WHERE d.presupuesto > 200000
+          -> GROUP BY d.nombre;
+      +------------------+-----------------+
+      | Departamento     | Total_empleados |
+      +------------------+-----------------+
+      | Recursos Humanos |               2 |
+      | I+D              |               2 |
+      +------------------+-----------------+
+      2 rows in set (0,00 sec)
+      ```
 
 
 
+## Subconsultas
 
+###### Con operadores básicos de comparación
+
+1. Devuelve un listado con todos los empleados que tiene el departamento
+  de Sistemas. (Sin utilizar INNER JOIN).
+
+  ```mysql
+  mysql> SELECT e.codigo,e.nombre
+      -> FROM empleado AS e
+      -> WHERE e.codigo_departamento IN (
+      ->     SELECT d.codigo
+      ->     FROM departamento AS d
+      ->     WHERE d.nombre = 'Sistemas'
+      -> );
+  +--------+--------+
+  | codigo | nombre |
+  +--------+--------+
+  |      2 | Adela  |
+  |      7 | Pilar  |
+  |      9 | Juan   |
+  +--------+--------+
+  3 rows in set (0,00 sec)
+  
+  ```
+
+  
+
+2. Devuelve el nombre del departamento con mayor presupuesto y la cantidad
+  que tiene asignada.
+
+  ```mysql
+  mysql> SELECT d.nombre,d.presupuesto
+      -> FROM departamento AS d
+      -> WHERE d.presupuesto IN (
+      ->     SELECT MAX(presupuesto)
+      ->     FROM departamento
+      -> );
+  +--------+-------------+
+  | nombre | presupuesto |
+  +--------+-------------+
+  | I+D    |      375000 |
+  +--------+-------------+
+  1 row in set (0,00 sec)
+  
+  ```
+
+  
+
+3. Devuelve el nombre del departamento con menor presupuesto y la cantidad
+  que tiene asignada.
+  Subconsultas con ALL y ANY
+
+  ```mysql
+  
+  ```
+
+  
+
+4. Devuelve el nombre del departamento con mayor presupuesto y la cantidad
+  que tiene asignada. Sin hacer uso de MAX, ORDER BY ni LIMIT.
+
+  ```mysql
+  
+  ```
+
+  
+
+5. Devuelve el nombre del departamento con menor presupuesto y la cantidad
+  que tiene asignada. Sin hacer uso de MIN, ORDER BY ni LIMIT.
+
+  ```mysql
+  
+  ```
+
+  
+
+6. Devuelve los nombres de los departamentos que tienen empleados
+  asociados. (Utilizando ALL o ANY).
+
+  ```mysql
+  
+  ```
+
+  
+
+7. Devuelve los nombres de los departamentos que no tienen empleados
+  asociados. (Utilizando ALL o ANY).
+  Subconsultas con IN y NOT IN
+
+  ```mysql
+  
+  ```
+
+  
+
+8. Devuelve los nombres de los departamentos que tienen empleados
+  asociados. (Utilizando IN o NOT IN).
+
+  ```
+  
+  ```
+
+  
+
+9. Devuelve los nombres de los departamentos que no tienen empleados
+  asociados. (Utilizando IN o NOT IN).
+  Subconsultas con EXISTS y NOT EXISTS
+
+  ```
+  
+  ```
+
+  
+
+10. Devuelve los nombres de los departamentos que tienen empleados
+    asociados. (Utilizando EXISTS o NOT EXISTS).
+
+    ```
+    
+    ```
+
+    
+
+11. Devuelve los nombres de los departamentos que tienen empleados
+    asociados. (Utilizando EXISTS o NOT EXISTS).
+
+```
+
+```
 
