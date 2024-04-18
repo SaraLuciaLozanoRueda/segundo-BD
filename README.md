@@ -978,27 +978,28 @@ Marta|1|1|Desarrollo|120000.0|6000.0
     empleados que no tienen ningún departamento asociado.
 
   ```mysql
-  mysql> SELECT e.nombre,d.nombre AS departamento
-      -> FROM empleado AS e
-      -> LEFT JOIN departamento AS d ON e.codigo_departamento = d.codigo; 
-  +--------------+------------------+
-  | nombre       | departamento     |
-  +--------------+------------------+
-  | Aarón        | Desarrollo       |
-  | Adela        | Sistemas         |
-  | Adolfo       | Recursos Humanos |
-  | Adrián       | Contabilidad     |
-  | Marcos       | I+D              |
-  | María        | Desarrollo       |
-  | Pilar        | Sistemas         |
-  | Pepe         | Recursos Humanos |
-  | Juan         | Sistemas         |
-  | Diego        | I+D              |
-  | Marta        | Desarrollo       |
-  | Irene        | NULL             |
-  | Juan Antonio | NULL             |
-  +--------------+------------------+
-  13 rows in set (0,00 sec)
+mysql> SELECT e.nombre,d.nombre AS departamento,d.codigo,d.presupuesto,d.gasto
+    -> FROM empleado AS e
+    -> LEFT JOIN departamento AS d ON e.codigo_departamento = d.codigo; 
++--------------+------------------+--------+-------------+--------+
+| nombre       | departamento     | codigo | presupuesto | gasto  |
++--------------+------------------+--------+-------------+--------+
+| Aarón        | Desarrollo       |      1 |      120000 |   6000 |
+| Adela        | Sistemas         |      2 |      150000 |  21000 |
+| Adolfo       | Recursos Humanos |      3 |      280000 |  25000 |
+| Adrián       | Contabilidad     |      4 |      110000 |   3000 |
+| Marcos       | I+D              |      5 |      375000 | 380000 |
+| María        | Desarrollo       |      1 |      120000 |   6000 |
+| Pilar        | Sistemas         |      2 |      150000 |  21000 |
+| Pepe         | Recursos Humanos |      3 |      280000 |  25000 |
+| Juan         | Sistemas         |      2 |      150000 |  21000 |
+| Diego        | I+D              |      5 |      375000 | 380000 |
+| Marta        | Desarrollo       |      1 |      120000 |   6000 |
+| Irene        | NULL             |   NULL |        NULL |   NULL |
+| Juan Antonio | NULL             |   NULL |        NULL |   NULL |
++--------------+------------------+--------+-------------+--------+
+13 rows in set (0,00 sec)
+
   
   ```
 
@@ -1045,34 +1046,38 @@ Marta|1|1|Desarrollo|120000.0|6000.0
     nombre del departamento.
 
   ```mysql
-  mysql> SELECT e.nombre,d.nombre AS departamento
-      -> FROM empleado AS e
-      -> LEFT JOIN departamento AS d ON e.codigo_departamento = d.codigo
-      -> UNION
-      -> SELECT e.nombre,d.nombre AS departamento
-      -> FROM empleado AS e
-      -> RIGHT JOIN departamento AS d ON e.codigo_departamento = d.codigo 
-      -> WHERE e.codigo_departamento IS NULL;
-  +--------------+------------------+
-  | nombre       | departamento     |
-  +--------------+------------------+
-  | Aarón        | Desarrollo       |
-  | Adela        | Sistemas         |
-  | Adolfo       | Recursos Humanos |
-  | Adrián       | Contabilidad     |
-  | Marcos       | I+D              |
-  | María        | Desarrollo       |
-  | Pilar        | Sistemas         |
-  | Pepe         | Recursos Humanos |
-  | Juan         | Sistemas         |
-  | Diego        | I+D              |
-  | Marta        | Desarrollo       |
-  | Irene        | NULL             |
-  | Juan Antonio | NULL             |
-  | NULL         | Proyectos        |
-  | NULL         | Publicidad       |
-  +--------------+------------------+
-  15 rows in set (0,00 sec)
+mysql> SELECT e.nombre,d.nombre AS departamento
+    -> FROM empleado AS e
+    -> LEFT JOIN departamento AS d ON e.codigo_departamento = d.codigo
+    -> UNION
+    -> SELECT e.nombre,d.nombre AS departamento
+    -> FROM empleado AS e
+    -> RIGHT JOIN departamento AS d ON e.codigo_departamento = d.codigo 
+    -> WHERE e.codigo_departamento IS NULL
+    -> 
+    ->     
+    -> ORDER BY departamento ASC;
++--------------+------------------+
+| nombre       | departamento     |
++--------------+------------------+
+| Irene        | NULL             |
+| Juan Antonio | NULL             |
+| Adrián       | Contabilidad     |
+| Aarón        | Desarrollo       |
+| María        | Desarrollo       |
+| Marta        | Desarrollo       |
+| Marcos       | I+D              |
+| Diego        | I+D              |
+| NULL         | Proyectos        |
+| NULL         | Publicidad       |
+| Adolfo       | Recursos Humanos |
+| Pepe         | Recursos Humanos |
+| Adela        | Sistemas         |
+| Pilar        | Sistemas         |
+| Juan         | Sistemas         |
++--------------+------------------+
+15 rows in set (0,00 sec)
+
   
   ```
 
