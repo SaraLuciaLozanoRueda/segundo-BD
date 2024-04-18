@@ -1355,7 +1355,7 @@ Marta|1|1|Desarrollo|120000.0|6000.0
 ###### Con operadores básicos de comparación
 
 1. Devuelve un listado con todos los empleados que tiene el departamento
-  de Sistemas. (Sin utilizar INNER JOIN).
+    de Sistemas. (Sin utilizar INNER JOIN).
 
   ```mysql
   mysql> SELECT e.codigo,e.nombre
@@ -1379,7 +1379,7 @@ Marta|1|1|Desarrollo|120000.0|6000.0
   
 
 2. Devuelve el nombre del departamento con mayor presupuesto y la cantidad
-  que tiene asignada.
+    que tiene asignada.
 
   ```mysql
   mysql> SELECT d.nombre,d.presupuesto
@@ -1400,66 +1400,143 @@ Marta|1|1|Desarrollo|120000.0|6000.0
   
 
 3. Devuelve el nombre del departamento con menor presupuesto y la cantidad
-  que tiene asignada.
-  Subconsultas con ALL y ANY
+    que tiene asignada.
+    Subconsultas con ALL y ANY
 
   ```mysql
+  mysql> SELECT d.nombre, d.presupuesto
+      -> FROM departamento AS d
+      -> WHERE d.presupuesto < ALL (SELECT presupuesto FROM departamento WHERE presupuesto <> d.presupuesto);
+  +------------+-------------+
+  | nombre     | presupuesto |
+  +------------+-------------+
+  | Proyectos  |           0 |
+  | Publicidad |           0 |
+  +------------+-------------+
+  2 rows in set (0,00 sec)
   
   ```
 
   
 
 4. Devuelve el nombre del departamento con mayor presupuesto y la cantidad
-  que tiene asignada. Sin hacer uso de MAX, ORDER BY ni LIMIT.
+    que tiene asignada. Sin hacer uso de MAX, ORDER BY ni LIMIT.
 
   ```mysql
-  
+  mysql> SELECT d.nombre, d.presupuesto
+      -> FROM departamento AS d
+      -> WHERE d.presupuesto > ALL (SELECT presupuesto FROM departamento WHERE presupuesto <> d.presupuesto);
+  +--------+-------------+
+  | nombre | presupuesto |
+  +--------+-------------+
+  | I+D    |      375000 |
+  +--------+-------------+
+  1 row in set (0,00 sec)
   ```
 
   
 
 5. Devuelve el nombre del departamento con menor presupuesto y la cantidad
-  que tiene asignada. Sin hacer uso de MIN, ORDER BY ni LIMIT.
+    que tiene asignada. Sin hacer uso de MIN, ORDER BY ni LIMIT.
 
   ```mysql
-  
+  mysql> SELECT d.nombre, d.presupuesto
+      -> FROM departamento AS d
+      -> WHERE d.presupuesto < ALL (SELECT presupuesto FROM departamento WHERE presupuesto <> d.presupuesto);
+  +------------+-------------+
+  | nombre     | presupuesto |
+  +------------+-------------+
+  | Proyectos  |           0 |
+  | Publicidad |           0 |
+  +------------+-------------+
+  2 rows in set (0,00 sec)
   ```
 
   
 
 6. Devuelve los nombres de los departamentos que tienen empleados
-  asociados. (Utilizando ALL o ANY).
+    asociados. (Utilizando ALL o ANY).
 
   ```mysql
+  mysql> SELECT DISTINCT  d.nombre
+      -> FROM departamento AS d,empleado AS e
+      -> WHERE e.codigo_departamento = ANY (SELECT codigo_departamento FROM empleado WHERE e.codigo_departamento = d.codigo);
+  +------------------+
+  | nombre           |
+  +------------------+
+  | Desarrollo       |
+  | Sistemas         |
+  | Recursos Humanos |
+  | Contabilidad     |
+  | I+D              |
+  +------------------+
+  5 rows in set (0,00 sec)
   
   ```
 
   
 
 7. Devuelve los nombres de los departamentos que no tienen empleados
-  asociados. (Utilizando ALL o ANY).
-  Subconsultas con IN y NOT IN
+    asociados. (Utilizando ALL o ANY).
+    Subconsultas con IN y NOT IN
 
   ```mysql
+  mysql> SELECT d.nombre
+      -> FROM departamento AS d
+      -> WHERE d.codigo NOT IN (SELECT DISTINCT codigo_departamento FROM empleado WHERE codigo_departamento IS NOT NULL);
+  +------------+
+  | nombre     |
+  +------------+
+  | Proyectos  |
+  | Publicidad |
+  +------------+
+  2 rows in set (0,00 sec)
   
   ```
 
   
 
 8. Devuelve los nombres de los departamentos que tienen empleados
-  asociados. (Utilizando IN o NOT IN).
+    asociados. (Utilizando IN o NOT IN).
 
-  ```
+  ```mysql
+  mysql> SELECT d.nombre
+      -> FROM departamento AS d
+      -> WHERE codigo IN (SELECT DISTINCT codigo_departamento FROM empleado WHERE codigo_departamento IS NOT NULL);
+  +------------------+
+  | nombre           |
+  +------------------+
+  | Desarrollo       |
+  | Sistemas         |
+  | Recursos Humanos |
+  | Contabilidad     |
+  | I+D              |
+  +------------------+
+  5 rows in set (0,00 sec)
   
   ```
 
   
 
 9. Devuelve los nombres de los departamentos que no tienen empleados
-  asociados. (Utilizando IN o NOT IN).
-  Subconsultas con EXISTS y NOT EXISTS
+    asociados. (Utilizando IN o NOT IN).
+    Subconsultas con EXISTS y NOT EXISTS
 
-  ```
+  ```mysql
+  mysql> SELECT d.nombre
+      -> FROM departamento AS d
+      -> WHERE NOT EXISTS (
+      ->     SELECT 1
+      ->     FROM empleado as e
+      ->     WHERE e.codigo_departamento = d.codigo
+      -> );
+  +------------+
+  | nombre     |
+  +------------+
+  | Proyectos  |
+  | Publicidad |
+  +------------+
+  2 rows in set (0,00 sec)
   
   ```
 
@@ -1468,16 +1545,39 @@ Marta|1|1|Desarrollo|120000.0|6000.0
 10. Devuelve los nombres de los departamentos que tienen empleados
     asociados. (Utilizando EXISTS o NOT EXISTS).
 
-    ```
+    ```mysql
+    mysql> SELECT d.nombre
+        -> FROM departamento AS d
+        -> WHERE EXISTS (
+        ->     SELECT 1
+        ->     FROM empleado as e
+        ->     WHERE e.codigo_departamento = d.codigo
+        -> );
+    +------------------+
+    | nombre           |
+    +------------------+
+    | Desarrollo       |
+    | Sistemas         |
+    | Recursos Humanos |
+    | Contabilidad     |
+    | I+D              |
+    +------------------+
+    5 rows in set (0,00 sec)
     
     ```
-
     
-
+    
+    
 11. Devuelve los nombres de los departamentos que tienen empleados
     asociados. (Utilizando EXISTS o NOT EXISTS).
 
-```
-
+```mysql
+SELECT d.nombre
+FROM departamento AS d
+WHERE EXISTS (
+    SELECT 1
+    FROM empleado as e
+    WHERE e.codigo_departamento = d.codigo
+);
 ```
 
